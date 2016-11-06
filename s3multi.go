@@ -8,7 +8,7 @@ import (
 	"os"
 	"sync"
 
-	"launchpad.net/goamz/s3"
+	"github.com/AdRoll/goamz/s3"
 )
 
 var (
@@ -51,6 +51,7 @@ func (s *S3Writer) WriteStr(key, value string) (int, error) {
 }
 
 //WriteStr writes a byte slice to a s3 object named key. No newline is added.
+//I initially planned to use channel+goroutinue to do the writing, but that makes error passing a PITA.
 func (s *S3Writer) Write(key string, value []byte) (int, error) {
 	if !s.accepting {
 		return 0, ErrClosed
@@ -87,8 +88,8 @@ func (s *S3Writer) Upload() error {
 		if err != nil {
 			return err
 		}
-		//Upload to S3
-		err = s.bucket.PutReader(k, f, stat.Size(), "application/octet-stream", "")
+		//Upload to S3 - Maybe do this concurrently?
+		err = s.bucket.PutReader(k, f, stat.Size(), "application/octet-stream", "", s3.Options{})
 		if err != nil {
 			return err
 		}
