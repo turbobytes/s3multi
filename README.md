@@ -10,28 +10,30 @@ This abstraction makes it feel as if you are streaming data into S3 directly, bu
 
 ## Usage
 
-	var auth aws.Auth
-	auth.AccessKey = "ACCESS_KEY"
-	auth.SecretKey = "SECRET_KEY"
-	s := s3.New(auth, aws.USEast)
-	bucket := s.Bucket("my-bucket-that-exists-in-region") //Where Bucket is https://godoc.org/github.com/AdRoll/goamz/s3#Bucket
-	s3w := s3multi.NewS3Writer(bucket, true) //true means we want output to be gzipped
-	_, err := s3w.WriteStr("foo.log.gz", "bar\n")
-	if err != nil {
-		log.Fatal(err)
-	}
-	_, err = s3w.WriteStr("bar.log.gz", "y\n")
-	if err != nil {
-		log.Fatal(err)
-	}
-	_, err = s3w.WriteStr("foo.log.gz", "baz\n")
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = s3w.Upload()
-	if err != nil {
-		log.Fatal(err)
-	}
+```go
+var auth aws.Auth
+auth.AccessKey = "ACCESS_KEY"
+auth.SecretKey = "SECRET_KEY"
+s := s3.New(auth, aws.USEast)
+bucket := s.Bucket("my-bucket-that-exists-in-region") //Where Bucket is https://godoc.org/github.com/AdRoll/goamz/s3#Bucket
+s3w := s3multi.NewS3Writer(bucket, true) //true means we want output to be gzipped
+_, err := s3w.WriteStr("foo.log.gz", "bar\n")
+if err != nil {
+	log.Fatal(err)
+}
+_, err = s3w.WriteStr("bar.log.gz", "y\n")
+if err != nil {
+	log.Fatal(err)
+}
+_, err = s3w.WriteStr("foo.log.gz", "baz\n")
+if err != nil {
+	log.Fatal(err)
+}
+err = s3w.Upload()
+if err != nil {
+	log.Fatal(err)
+}
+```
 
 ## Design goals
 
